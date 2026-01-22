@@ -1,0 +1,13 @@
+apiVersion: v2
+name: webapp
+description: Production Web Application Helm Chart
+type: application
+version: 1.2.0
+appVersion: "2.1.0"
+keywords:
+- webapp
+- nodejs
+- gitops
+maintainers:
+- name: Platform Team
+  email: devops@company.com
