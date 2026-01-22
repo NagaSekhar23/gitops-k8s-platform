@@ -1,15 +1,26 @@
-# OS
+# OS Files
 .DS_Store
 Thumbs.db
+.DS_Store?
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
 
 # Terraform
 .terraform/
 *.tfstate
 *.tfstate.*
+.terraform.lock.hcl
 
-# Helm
+# Helm  
 charts/*/charts
 charts/*/.helmignore
 
-# K8s
+# Kustomize
+kustomize.lock.json
+
+# Logs
 *.log
