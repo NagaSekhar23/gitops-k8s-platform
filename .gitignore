@@ -1,0 +1,15 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+
+# Helm
+charts/*/charts
+charts/*/.helmignore
+
+# K8s
+*.log
