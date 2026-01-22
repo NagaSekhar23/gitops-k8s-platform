@@ -1,0 +1,30 @@
+replicaCount: 10
+
+image:
+  repository: python
+  tag: "3.11-slim"
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+redis:
+  host: "redis-service"
+  port: 6379
+
+database:
+  host: "postgres-service"
+  port: 5432
+
+env:
+  - name: REDIS_URL
+    value: "redis://$(REDIS_HOST):$(REDIS_PORT)"
+  - name: DATABASE_URL
+    valueFrom:
+      secretKeyRef:
+        name: worker-secrets
+        key: db-url

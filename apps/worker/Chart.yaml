@@ -1,0 +1,11 @@
+apiVersion: v2
+name: worker
+description: Background Job Worker Helm Chart
+type: application
+version: 1.0.5
+appVersion: "1.5.2"
+keywords:
+- worker
+- jobs
+- celery
+- queue
