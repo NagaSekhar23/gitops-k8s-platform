@@ -1,0 +1,14 @@
+apiVersion: v2
+name: api
+description: Backend REST API Helm Chart
+type: application
+version: 2.1.0
+appVersion: "3.2.1"
+keywords:
+- api
+- backend
+- nodejs
+- express
+maintainers:
+- name: Backend Team
+  email: backend@company.com
