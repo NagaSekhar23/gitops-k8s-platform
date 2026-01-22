@@ -1,0 +1,15 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+- ../../k8s-manifests/base
+
+patchesStrategicMerge:
+- patch-prod.yaml
+- patch-resources.yaml
+
+secretGenerator:
+- name: prod-secrets
+  literals:
+  - database-url=postgres://prod:pass@prod-db:5432/prod
+  - api-key=prod-api-key-123
