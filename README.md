@@ -64,6 +64,16 @@ This project demonstrates **real-world platform engineering**, **SRE practices**
 - Argo CD auto-sync on Git changes
 
 ---
+gitops-k8s-platform/  [https://github.com/NagaSekhar23/gitops-k8s-platform](https://github.com/NagaSekhar23/gitops-k8s-platform)
+├── infra/
+│   └── terraform/      # ✅ EKS cluster (main.tf here)
+├── environments/
+│   └── prod/           # Env-specific overrides (values.yaml)
+├── charts/
+│   └── argo-apps/      # Helm charts for ArgoCD apps
+├── .github/
+│   └── workflows/      # CI/CD pipelines
+└── .git/               # Git internals
 
 ## 🏗️ High-Level Architecture
 
@@ -226,3 +236,4 @@ Cost-optimized AWS architecture
 📜 License
 
 MIT License
+
