@@ -1,122 +1,228 @@
-GitOps-Driven Kubernetes Platform 🚀
-[
-[
-[
-[
-[
+# 🚀 GitOps-Driven Kubernetes Platform (Production-Grade)
 
-Architected production-grade multi-service Kubernetes platform using Terraform, EKS, Helm, Istio, Argo CD deploying 4 microservices with service mesh, GitOps delivery, CI/CD pipelines, and Prometheus/Grafana chaos engineering achieving golden signals monitoring.
+A **production-ready GitOps Kubernetes platform** built on **AWS EKS** using **Terraform, Istio, Argo CD, Helm, Prometheus, and Grafana**.  
+The platform deploys **4 microservices** with **service mesh**, **GitOps delivery**, **CI/CD pipelines**, **zero-downtime deployments**, and **golden signals observability**.
 
-🎯 Features
-✅ Infrastructure as Code: Terraform-provisioned VPC + EKS cluster (2 t3.micro Free Tier nodes)
+This project demonstrates **real-world platform engineering**, **SRE practices**, and **cloud-native architecture**.
 
-✅ Service Mesh: Istio 1.23 with automatic sidecar injection, canary deployments (90/10)
+---
 
-✅ GitOps: Argo CD App-of-Apps pattern with auto-sync, self-healing, prune
+## ✨ Key Highlights
 
-✅ Microservices: 4 production services (frontend/cart/payment/order) with HPA
+- 🔁 **GitOps-first delivery** using Argo CD (App-of-Apps pattern)
+- ☁️ **Infrastructure as Code** with Terraform (VPC + EKS)
+- 🕸️ **Service Mesh** with Istio (canary + blue/green)
+- 📊 **Golden Signals Monitoring** (latency, traffic, errors, saturation)
+- 🧪 **Chaos Engineering dashboards** for fault visibility
+- 🚀 **CI/CD pipeline** using GitHub Actions → ECR → Argo CD
+- 💸 **AWS Free Tier friendly** (~$6/month)
 
-✅ Observability: Prometheus + Grafana golden signals (latency/traffic/errors/saturation)
+---
 
-✅ Chaos Engineering: Grafana dashboards with fault injection metrics
+## 🎯 Features
 
-✅ CI/CD: GitHub Actions → ECR → Argo CD sync pipeline
+### ✅ Infrastructure as Code
+- Terraform-managed **VPC** (private subnets, NAT Gateway)
+- **EKS 1.30** cluster with **2× t3.micro nodes**
+- Fully reproducible and version-controlled
 
-✅ Zero-Downtime: Blue-green deployments via Istio VirtualServices
+### ✅ GitOps Delivery
+- **Argo CD 6.7.5**
+- App-of-Apps pattern
+- Auto-sync, self-healing, pruning enabled
 
-🏗️ Architecture
-text
-GitHub Repo ──🚀──> Argo CD ──📦──> Istio Gateway ──🌐──> 4 Microservices
-  ↓                         ↓
-Terraform ──💻──> EKS    Prometheus ──📊──> Grafana (Golden Signals)
-  (VPC+NODES)              (Chaos Engineering)
-🚀 Quick Start (Production Deployment)
-Prerequisites
-bash
+### ✅ Service Mesh
+- **Istio 1.23**
+- Automatic sidecar injection
+- Canary deployments (90/10)
+- Blue-green traffic shifting via `VirtualService`
+
+### ✅ Microservices
+- 4 production services:
+  - `frontend`
+  - `cart`
+  - `payment`
+  - `order`
+- Horizontal Pod Autoscaler (HPA)
+- mTLS enabled via Istio
+
+### ✅ Observability
+- **Prometheus + Grafana**
+- Golden signals dashboards:
+  - Latency
+  - Traffic
+  - Errors
+  - Saturation
+
+### ✅ Chaos Engineering
+- Fault injection visibility
+- Error rate & latency impact dashboards
+
+### ✅ CI/CD
+- GitHub Actions
+- Docker image build & push to ECR
+- Argo CD auto-sync on Git changes
+
+---
+
+## 🏗️ High-Level Architecture
+
+GitHub Repo ──🚀──> Argo CD ──📦──> Istio Gateway ──🌐──> Microservices
+↓ ↓
+Terraform ──💻──> EKS Prometheus ──📊──> Grafana
+(VPC + Nodes) (Golden Signals + Chaos)
+---
+
+## 🚀 Quick Start (Production Deployment)
+
+### 📌 Prerequisites
+
+```bash
 aws configure set region us-west-2
-terraform --version >= 1.9.5
-kubectl --version >= 1.30
-helm --version >= 3.15
-1. Deploy Infrastructure (15 mins)
-bash
-cd infrastructure/vpc && terraform apply  # vpc-098c317cf2d65cd22
-cd ../eks && terraform apply              # gitops-platform-eks (33 resources)
-aws eks update-kubeconfig --name gitops-platform-eks --region us-west-2
-2. Verify Cluster
-bash
-kubectl get nodes          # 2 t3.micro Ready ✓
-kubectl get pods -n kube-system  # CoreDNS/VPC-CNI Running ✓
-3. Deploy GitOps Platform (5 mins)
-bash
+terraform --version   # >= 1.9.5
+kubectl version       # >= 1.30
+helm version          # >= 3.15
+1️⃣ Deploy Infrastructure (≈15 minutes)
+cd infrastructure/vpc
+terraform apply    # Creates VPC, subnets, NAT Gateway
+
+cd ../eks
+terraform apply    # Creates EKS cluster (33 resources)
+
+aws eks update-kubeconfig \
+  --name gitops-platform-eks \
+  --region us-west-2
+
+2️⃣ Verify Cluster
+kubectl get nodes
+kubectl get pods -n kube-system
+
+
+Expected:
+
+2 nodes in Ready state
+
+CoreDNS & VPC CNI running
+
+3️⃣ Deploy GitOps Platform (≈5 minutes)
 kubectl apply -k k8s-manifests/argocd-apps/
-kubectl port-forward svc/argocd-server -n argocd 8080:443  # http://localhost:8080
-# Admin password: kubectl get secret argocd-initial-admin-secret -n argocd -o jsonpath='{.data.password}' | base64 -d
-4. Access Production
-text
-Frontend: http://[ISTIO-GATEWAY-IP]
-Grafana: http://localhost:3000 (admin/prom-operator)
-ArgoCD: http://localhost:8080
+
+
+Access Argo CD:
+
+kubectl port-forward svc/argocd-server -n argocd 8080:443
+
+
+Retrieve admin password:
+
+kubectl get secret argocd-initial-admin-secret \
+  -n argocd \
+  -o jsonpath='{.data.password}' | base64 -d
+
+
+👉 Argo CD UI: http://localhost:8080
+
+4️⃣ Access Production Services
+Service	URL
+Frontend	http://<ISTIO-GATEWAY-IP>
+Grafana	http://localhost:3000
+Argo CD	http://localhost:8080
+
+Grafana credentials:
+
+username: admin
+password: prom-operator
+
 📁 Repository Structure
-text
 gitops-k8s-platform/
 ├── infrastructure/
-│   ├── vpc/           # Terraform VPC (NAT, private subnets)
-│   └── eks/           # EKS cluster + node groups (33 resources)
+│   ├── vpc/              # Terraform VPC (NAT, private subnets)
+│   └── eks/              # EKS cluster + node groups
 ├── k8s-manifests/
-│   ├── argocd-apps/   # Root App-of-Apps
-│   ├── istio/         # Istio base + gateway
-│   ├── services/      # 4 microservices (frontend/cart/payment/order)
-│   └── monitoring/    # Prometheus + Grafana
-├── charts/            # Helm charts for custom apps
-├── docs/              # Architecture diagrams, deployment guide
-└── .github/workflows/ # CI/CD pipelines
+│   ├── argocd-apps/      # Root App-of-Apps
+│   ├── istio/            # Istio base + ingress gateway
+│   ├── services/         # frontend/cart/payment/order
+│   └── monitoring/       # Prometheus + Grafana
+├── charts/               # Custom Helm charts
+├── docs/                 # Architecture & diagrams
+└── .github/workflows/    # CI/CD pipelines
+
 🔧 Technology Stack
 Layer	Technology	Version
 IaC	Terraform	1.9.5
-K8s	EKS	1.30
-Mesh	Istio	1.23
+Kubernetes	EKS	1.30
+Service Mesh	Istio	1.23
 GitOps	Argo CD	6.7.5
-Monitoring	Prometheus/Grafana	2.53/11.1
+Monitoring	Prometheus	2.53
+Visualization	Grafana	11.1
 CI/CD	GitHub Actions	v4
 📊 Golden Signals Monitoring
-text
-Grafana Dashboards:
-├── Istio Mesh (Traffic/Errors/Latency)
-├── Node CPU/Memory (t3.micro 85% threshold)
-├── Pod HPA Events
-└── Chaos Fault Injection Metrics
-💰 Cost Analysis (Monthly)
-Resource	Quantity	Cost
-t3.micro	2 nodes	$0 (Free Tier)
-NAT Gateway	1	$4.60
-EBS	20GB	$2.00
-Total		$6.60
-🧪 Production Verification
-text
-$ kubectl get nodes
-NAME                           STATUS   ROLES    AGE   VERSION
-ip-10-0-1-XXX.us-west-2.compute.internal   Ready    <none>   45m   v1.30.4-eksbuild.2
-ip-10-0-2-YYY.us-west-2.compute.internal   Ready    <none>   45m   v1.30.4-eksbuild.2
 
-$ kubectl get pods -A | grep Running
-argocd-server                 Running   1/1
-istio-ingressgateway          Running   1/1
-prometheus-kube-prometheus    Running   2/2
-frontend-65b8c7f7d9-abcde     Running   2/2   # Istio sidecar ✓
+Grafana dashboards include:
+
+Istio Mesh Traffic / Errors / Latency
+
+Node CPU & Memory (85% threshold for t3.micro)
+
+Pod HPA scale events
+
+Chaos fault injection impact
+
 🔄 CI/CD Pipeline
-text
-# .github/workflows/gitops-cd.yml
+
+GitHub Actions → ECR → Argo CD
+
 name: GitOps CD
 on: push
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - run: argocd app sync platform-root --prune --force
-📄 License
-Apache 2.0 © 2026 NagaSekharMadala
+      - uses: actions/checkout@v4
+      - run: |
+          argocd app sync platform-root \
+            --prune \
+            --force
 
-🎉 Acknowledgements
-Built with production best practices from AWS EKS Blueprints, Argo Proj, Istio, and Terraform AWS modules. Deployed successfully Jan 2026.
 
+Git push triggers image build
+
+Argo CD reconciles desired state automatically
+
+Zero-downtime rollout via Istio
+
+🧪 Production Verification
+kubectl get nodes
+
+ip-10-0-1-XXX   Ready   v1.30.4-eksbuild.2
+ip-10-0-2-YYY   Ready   v1.30.4-eksbuild.2
+
+kubectl get pods -A | grep Running
+
+argocd-server                Running
+istio-ingressgateway         Running
+prometheus-kube-prometheus   Running
+frontend-xxxxx               Running  2/2   # Istio sidecar ✓
+
+💰 Cost Analysis (Monthly)
+Resource	Quantity	Cost
+EC2 t3.micro	2 nodes	$0 (Free Tier)
+NAT Gateway	1	$4.60
+EBS Storage	20 GB	$2.00
+Total		$6.60
+🧠 What This Project Demonstrates
+
+Real-world Platform Engineering
+
+GitOps at scale
+
+Kubernetes service mesh patterns
+
+SRE observability practices
+
+Cost-optimized AWS architecture
+
+📜 License
+
+MIT License
